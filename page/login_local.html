@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>CheckBox Selection on DataGrid - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="./libs/easyui/themes/bootstrap/easyui.css">
+	<link rel="stylesheet" type="text/css" href="./libs/easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="./css/common.css">
+	<script type="text/javascript" src="./libs/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="./libs/easyui/jquery.easyui.min.js"></script>
+</head>
+<body>
+
+<div style="margin:200px 0;"></div>
+<center>
+    <div class="easyui-panel" title="Login" style="width:100%;max-width:400px;padding:30px 60px;">
+        <form id="ff" action="/dashview/login/signin" method="post">
+            <div style="margin-bottom:20px">
+                <input class="easyui-textbox" name="userName" id="userName" style="width:100%;" data-options="label:'userName:',required:false">
+            </div>
+            <div style="margin-bottom:20px">
+                <input type="password" class="easyui-textbox" name="password" id="password" style="width:100%" data-options="label:'password:',required:false">
+				<input type="text" id="token" style="display:none;">
+            </div>
+        </form>
+        <div style="text-align:center;padding:5px 0">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="login()" style="width:80px">Login</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>
+        </div>
+		<div style="text-align:center;padding:5px 0">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="callAPI()" style="width:80px">Call API</a>
+        </div>
+    </div>
+</center>
+<script>
+	  var loginUrl = "http://localhost:8080/open/token";
+	  var apiURL = "http://localhost:8080/poc/hello";
+    var userName = ""
+	  var token = "";
+	  function login(){
+			userName = $('#userName').val();
+			var password = $('#password').val();
+      if(userName == '' || password == ''){
+        $.messager.alert('Info', "请输入用户名和密码", 'info');
+        return
+      }
+      tempURL = loginUrl+"?appKey="+userName+"&secret="+password+"&timestamp=''";
+      // tempURL = "http://20.26.33.122:32020/open/token?appKey=1000000007&secret=V4ML6U3GRZFZ6WPOEL3NGNDZRD1UD73FM0UZGXYK8FJIWMB8F5NS5DUZ8PKWW1N9&timestamp=''";
+      // alert(tempURL)
+
+      $.get(tempURL, function(result){
+        token = result;
+        alert("token: " + token);
+      });
+
+      // $.ajax({
+      //   type: "get",
+      //   // dataType: 'json',
+      //   dataType: "jsonp",
+      //   jsonp: "callback",
+      //   jsonpCallback: "receive",
+      //   url: tempURL
+      //   // success: function (data) {
+      //   //   alert(data);
+      //   // },
+      //   // error:function(er){
+      //   //   // alert(obj2string(er));
+      //   //   alert("fail");
+      //   //   $.each(er,function(key,val){
+      //   //       if($.isPlainObject(val) || $.isArray(val)){
+      //   //           subObj(val);
+      //   //       }else{
+      //   //           alert(key+'='+val);
+      //   //       }
+      //   //    });
+      //   // }
+      // });
+	   }
+
+  function receive(data) {
+        alert("dsfdsgdfgdf");
+    }
+
+    function clearForm(){
+      $('#ff').form('clear');
+    }
+
+		function callAPI(){
+			var tokenTemp = token;
+			if(tokenTemp == ''){
+				$.messager.alert('Info', "token为空", 'info');
+        return;
+		  }
+
+     $.ajax({
+      type: "get",
+      dataType: 'json',
+      url: apiURL,
+      // headers: {"token":"sdfsdfsd"},
+      success: function (data) {
+        alert(data);
+      },
+      error:function(er){
+        alert("fail");
+      }
+    });
+
+		}
+
+    </script>
+
+
+
+</body>
+</html>
